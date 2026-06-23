@@ -1,0 +1,144 @@
+# Redarbor Jobs
+---
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| Expo SDK 52 | Mobile framework |
+| React Native 0.76 | UI layer |
+| TypeScript | Type safety |
+| Zustand | Global state management |
+| Expo Router | File-based navigation |
+| NativeWind | Tailwind CSS for React Native |
+| AsyncStorage | Favorites persistence |
+| React Native WebView | HTML job descriptions |
+| FlashList | Performant job lists |
+| Expo Sharing | Share jobs natively |
+
+---
+
+## Features
+
+### 📋 Job Listings
+- List of remote jobs with company logo, title, company name, location and publication date
+- Text search by title and company name
+- Filter by category (using `/categories` endpoint)
+- Filter by job type (full-time, contract, etc.)
+- Visual indicator for saved favorites
+- Pull-to-refresh
+- Visual states: loading, error, empty results
+
+### 🔍 Job Detail
+- Full company and position information
+- Salary (when available)
+- Full HTML job description rendered natively
+- Save / remove from favorites
+- Apply to job (opens external URL)
+- Share job natively
+
+### ❤️ Favorites
+- Persisted across app restarts using AsyncStorage
+- Remove jobs from favorites
+- Navigate to job detail from favorites
+- Empty state when no favorites saved
+
+---
+
+## Project Structure
+
+```
+redarbor-jobs/
+├── app/
+│   ├── (tabs)/
+│   │   ├── _layout.tsx       # Tab navigator
+│   │   ├── index.tsx         # Job listings screen
+│   │   └── favorites.tsx     # Favorites screen
+│   ├── job/
+│   │   └── [id].tsx          # Job detail screen
+│   └── _layout.tsx           # Root stack layout
+├── src/
+│   ├── api/
+│   │   └── remotive.ts       # Remotive API client
+│   ├── types/
+│   │   └── job.ts            # TypeScript interfaces
+│   ├── store/
+│   │   ├── useJobsStore.ts   # Jobs + filters state (Zustand)
+│   │   └── useFavoritesStore.ts # Favorites + persistence (Zustand)
+│   ├── hooks/
+│   │   ├── useJobs.ts        # Jobs fetching hook
+│   │   └── useCategories.ts  # Categories fetching hook
+│   └── components/
+│       ├── JobCard.tsx        # Job list item
+│       ├── SearchBar.tsx      # Search input
+│       ├── FilterBar.tsx      # Category and type filters
+│       ├── FavoriteButton.tsx # Save/unsave button
+│       ├── EmptyState.tsx     # Empty results UI
+│       ├── LoadingState.tsx   # Loading skeleton UI
+│       └── ErrorState.tsx     # Error UI with retry
+├── app.json
+├── babel.config.js
+├── tailwind.config.js
+└── tsconfig.json
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+- Expo Go app on your phone ([iOS](https://apps.apple.com/app/expo-go/id982107779) / [Android](https://play.google.com/store/apps/details?id=host.exp.exponent))
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/redarbor-jobs.git
+
+# Navigate to the project
+cd redarbor-jobs
+
+# Install dependencies
+npm install --legacy-peer-deps
+```
+
+### Running the app
+
+```bash
+npx expo start
+```
+
+Then:
+- **iOS**: Scan the QR code with your iPhone camera
+- **Android**: Scan the QR code with the Expo Go app
+- **iOS Simulator**: Press `i`
+- **Android Emulator**: Press `a`
+
+---
+
+## API
+
+This app consumes the public [Remotive API](https://remotive.com/api):
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/remote-jobs` | List of remote jobs |
+| `GET /api/remote-jobs?search=` | Search by title or company |
+| `GET /api/remote-jobs?category=` | Filter by category |
+| `GET /api/remote-jobs?job_type=` | Filter by job type |
+| `GET /api/remote-jobs/categories` | List of categories |
+
+---
+
+## Architecture Decisions
+
+- **Zustand over Redux**: Simpler API, less boilerplate, perfect for this scale
+- **Expo Router**: File-based routing keeps navigation predictable and scalable
+- **NativeWind**: Utility-first styling speeds up UI development significantly
+- **FlashList over FlatList**: Better performance for long job lists
+- **AsyncStorage**: Lightweight persistence for favorites without a backend
+
+--

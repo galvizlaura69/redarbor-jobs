@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "redarbor-jobs",
+    "slug": "redarbor-jobs",
+    "scheme": "redarbor-jobs",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "plugins": ["expo-router"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
