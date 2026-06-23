@@ -1,4 +1,4 @@
-import { View, TextInput, TouchableOpacity } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface SearchBarProps {
@@ -13,18 +13,20 @@ export function SearchBar({
   placeholder = 'Search jobs or companies...',
 }: SearchBarProps) {
   return (
-    <View className="flex-row items-center bg-white border border-gray-200 rounded-xl px-3 py-2 mx-4 mb-3">
+    <View style={styles.container}>
       <Ionicons name="search-outline" size={18} color="#9CA3AF" />
+
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor="#9CA3AF"
-        className="flex-1 ml-2 text-sm text-gray-800"
+        style={styles.input}
         returnKeyType="search"
         autoCorrect={false}
         autoCapitalize="none"
       />
+
       {value.length > 0 && (
         <TouchableOpacity onPress={() => onChangeText('')}>
           <Ionicons name="close-circle" size={18} color="#9CA3AF" />
@@ -33,3 +35,24 @@ export function SearchBar({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginHorizontal: 16,
+    marginBottom: 12,
+  },
+  input: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 14,
+    color: '#1F2937',
+  },
+});

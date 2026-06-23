@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface ErrorStateProps {
@@ -11,22 +11,54 @@ export function ErrorState({
   onRetry,
 }: ErrorStateProps) {
   return (
-    <View className="flex-1 items-center justify-center px-8 py-16">
+    <View style={styles.container}>
       <Ionicons name="cloud-offline-outline" size={64} color="#F87171" />
-      <Text className="mt-4 text-xl font-semibold text-gray-700 text-center">
-        Oops!
-      </Text>
-      <Text className="mt-2 text-sm text-gray-400 text-center leading-5">
-        {message}
-      </Text>
+
+      <Text style={styles.title}>Oops!</Text>
+
+      <Text style={styles.message}>{message}</Text>
+
       {onRetry && (
-        <TouchableOpacity
-          onPress={onRetry}
-          className="mt-6 bg-indigo-600 px-6 py-3 rounded-xl"
-        >
-          <Text className="text-white font-semibold text-sm">Try again</Text>
+        <TouchableOpacity style={styles.button} onPress={onRetry}>
+          <Text style={styles.buttonText}>Try again</Text>
         </TouchableOpacity>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 64,
+  },
+  title: {
+    marginTop: 16,
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#374151',
+    textAlign: 'center',
+  },
+  message: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  button: {
+    marginTop: 24,
+    backgroundColor: '#4F46E5',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+});

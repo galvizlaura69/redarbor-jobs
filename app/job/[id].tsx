@@ -1,176 +1,83 @@
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  Share,
-  Linking,
-} from 'react-native';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { useLayoutEffect } from 'react';
-import { WebView } from 'react-native-webview';
-import { Ionicons } from '@expo/vector-icons';
-import { useJobsStore } from '@/store/useJobsStore';
-import { useFavoritesStore } from '@/store/useFavoritesStore';
-import { FavoriteButton } from '@/components/FavoriteButton';
+import { View, StyleSheet } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+
+import { useJobs } from '@/hooks/useJobs';
+import { useCategories } from '@/hooks/useCategories';
+
+import { JobCard } from '@/components/JobCard';
+import { SearchBar } from '@/components/SearchBar';
+import { FilterBar } from '@/components/FilterBar';
+import { LoadingState } from '@/components/LoadingState';
+import { ErrorState } from '@/components/ErrorState';
 import { EmptyState } from '@/components/EmptyState';
 
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
+import { Job } from '../../src/types/jobs';
 
-export default function JobDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const navigation = useNavigation();
+export default function JobsScreen() {
+  const {
+    jobs,
+    uiState,
+    error,
+    search,
+    category,
+    jobType,
+    loadJobs,
+    setSearch,
+    setCategory,
+    setJobType,
+    isLoading,
+    isError,
+  } = useJobs();
 
-  const job = useJobsStore((s) => s.jobs.find((j) => j.id === Number(id)))
-    ?? useFavoritesStore((s) => s.favorites.find((j) => j.id === Number(id)));
+  const { categories } = useCategories();
 
-  useLayoutEffect(() => {
-    if (job) {
-      navigation.setOptions({
-        headerRight: () => <FavoriteButton job={job} size={24} />,
-      });
-    }
-  }, [job]);
-
-  if (!job) {
-    return (
-      <EmptyState
-        title="Job not found"
-        message="This job is no longer available."
-        icon="briefcase-outline"
-      />
-    );
-  }
-
-  const handleApply = () => {
-    Linking.openURL(job.url);
-  };
-
-  const handleShare = async () => {
-    await Share.share({
-      title: job.title,
-      message: `Check out this job: ${job.title} at ${job.company_name}\n${job.url}`,
-    });
-  };
-
-  const htmlContent = `
-    <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          body {
-            font-family: -apple-system, sans-serif;
-            font-size: 15px;
-            color: #374151;
-            line-height: 1.7;
-            padding: 0 4px;
-            margin: 0;
-          }
-          h1, h2, h3 { color: #1F2937; }
-          a { color: #4F46E5; }
-          ul { padding-left: 20px; }
-          li { margin-bottom: 6px; }
-        </style>
-      </head>
-      <body>${job.description}</body>
-    </html>
-  `;
+  if (isLoading) return <LoadingState count={6} />;
+  if (isError)
+    return <ErrorState message={error ?? undefined} onRetry={loadJobs} />;
 
   return (
-    <ScrollView className="flex-1 bg-white">
-      <View className="px-4 pt-6 pb-4 border-b border-gray-100">
-        <View className="flex-row items-center mb-4">
-          {job.company_logo ? (
-            <Image
-              source={{ uri: job.company_logo }}
-              className="w-16 h-16 rounded-2xl"
-              resizeMode="contain"
+    <View style={styles.container}>
+      <FlashList
+        data={jobs}
+        keyExtractor={(item: Job) => String(item.id)}
+        renderItem={({ item }) => <JobCard job={item} />}
+        onRefresh={loadJobs}
+        refreshing={uiState === 'loading'}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <SearchBar value={search} onChangeText={setSearch} />
+
+            <FilterBar
+              categories={categories}
+              selectedCategory={category}
+              selectedJobType={jobType}
+              onSelectCategory={setCategory}
+              onSelectJobType={setJobType}
             />
-          ) : (
-            <View className="w-16 h-16 rounded-2xl bg-indigo-100 items-center justify-center">
-              <Text className="text-indigo-600 font-bold text-2xl">
-                {job.company_name.charAt(0)}
-              </Text>
-            </View>
-          )}
-          <View className="ml-4 flex-1">
-            <Text className="text-xl font-bold text-gray-800">
-              {job.title}
-            </Text>
-            <Text className="text-base text-gray-500 mt-1">
-              {job.company_name}
-            </Text>
           </View>
-        </View>
-        <View className="flex-row flex-wrap gap-2">
-          <View className="bg-indigo-50 px-3 py-1 rounded-full">
-            <Text className="text-xs text-indigo-600 font-medium">
-              {job.category}
-            </Text>
-          </View>
-          {job.job_type && (
-            <View className="bg-emerald-50 px-3 py-1 rounded-full">
-              <Text className="text-xs text-emerald-600 font-medium">
-                {job.job_type}
-              </Text>
-            </View>
-          )}
-        </View>
-      </View>
-      <View className="px-4 py-4 border-b border-gray-100">
-        <View className="flex-row items-center mb-3">
-          <Ionicons name="location-outline" size={18} color="#6B7280" />
-          <Text className="ml-2 text-sm text-gray-600">
-            {job.candidate_required_location || 'Worldwide'}
-          </Text>
-        </View>
-        <View className="flex-row items-center mb-3">
-          <Ionicons name="calendar-outline" size={18} color="#6B7280" />
-          <Text className="ml-2 text-sm text-gray-600">
-            {formatDate(job.publication_date)}
-          </Text>
-        </View>
-        {job.salary && (
-          <View className="flex-row items-center">
-            <Ionicons name="cash-outline" size={18} color="#6B7280" />
-            <Text className="ml-2 text-sm text-gray-600">{job.salary}</Text>
-          </View>
-        )}
-      </View>
-      <View className="px-4 pt-4">
-        <Text className="text-base font-semibold text-gray-800 mb-3">
-          Job Description
-        </Text>
-        <WebView
-          source={{ html: htmlContent }}
-          scrollEnabled={false}
-          style={{ height: 600 }}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-      <View className="px-4 py-6 flex-row gap-3">
-        <TouchableOpacity
-          onPress={handleApply}
-          className="flex-1 bg-indigo-600 py-4 rounded-2xl items-center"
-        >
-          <Text className="text-white font-semibold text-base">
-            Apply Now
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleShare}
-          className="bg-gray-100 px-4 py-4 rounded-2xl items-center"
-        >
-          <Ionicons name="share-outline" size={22} color="#4F46E5" />
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        }
+        ListEmptyComponent={
+          <EmptyState
+            title="No jobs found"
+            message="Try adjusting your search or filters to find what you're looking for."
+            icon="briefcase-outline"
+          />
+        }
+        contentContainerStyle={styles.list}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+  },
+  header: {
+    paddingTop: 16,
+  },
+  list: {
+    paddingBottom: 24,
+  },
+});

@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface EmptyStateProps {
@@ -13,14 +13,36 @@ export function EmptyState({
   icon = 'search-outline',
 }: EmptyStateProps) {
   return (
-    <View className="flex-1 items-center justify-center px-8 py-16">
+    <View style={styles.container}>
       <Ionicons name={icon} size={64} color="#9CA3AF" />
-      <Text className="mt-4 text-xl font-semibold text-gray-700 text-center">
-        {title}
-      </Text>
-      <Text className="mt-2 text-sm text-gray-400 text-center leading-5">
-        {message}
-      </Text>
+
+      <Text style={styles.title}>{title}</Text>
+
+      <Text style={styles.message}>{message}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 64,
+  },
+  title: {
+    marginTop: 16,
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#374151',
+    textAlign: 'center',
+  },
+  message: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+});

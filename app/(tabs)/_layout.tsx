@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 function FavoritesTabIcon({
   color,
@@ -13,11 +13,12 @@ function FavoritesTabIcon({
   const count = useFavoritesStore((s) => s.favorites.length);
 
   return (
-    <View>
+    <View style={styles.iconWrapper}>
       <Ionicons name="heart-outline" size={size} color={color} />
+
       {count > 0 && (
-        <View className="absolute -top-1 -right-2 bg-red-500 rounded-full w-4 h-4 items-center justify-center">
-          <Text className="text-white text-xs font-bold">
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>
             {count > 9 ? '9+' : count}
           </Text>
         </View>
@@ -25,6 +26,28 @@ function FavoritesTabIcon({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  iconWrapper: {
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -8,
+    backgroundColor: '#EF4444',
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '700',
+  },
+});
 
 export default function TabsLayout() {
   return (
@@ -54,6 +77,7 @@ export default function TabsLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
         name="favorites"
         options={{

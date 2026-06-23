@@ -1,5 +1,6 @@
-import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { Category } from '../types/jobs';
+import { FilterChip } from './FilterChip';
 
 const JOB_TYPES = ['full-time', 'contract', 'part-time', 'freelance', 'internship'];
 
@@ -11,33 +12,6 @@ interface FilterBarProps {
   onSelectJobType: (jobType: string) => void;
 }
 
-interface FilterChipProps {
-  label: string;
-  selected: boolean;
-  onPress: () => void;
-}
-
-function FilterChip({ label, selected, onPress }: FilterChipProps) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      className={`px-3 py-1.5 rounded-full border mr-2 ${
-        selected
-          ? 'bg-indigo-600 border-indigo-600'
-          : 'bg-white border-gray-200'
-      }`}
-    >
-      <Text
-        className={`text-xs font-medium ${
-          selected ? 'text-white' : 'text-gray-600'
-        }`}
-      >
-        {label}
-      </Text>
-    </TouchableOpacity>
-  );
-}
-
 export function FilterBar({
   categories,
   selectedCategory,
@@ -46,18 +20,19 @@ export function FilterBar({
   onSelectJobType,
 }: FilterBarProps) {
   return (
-    <View className="mb-3">
+    <View style={styles.container}>
+      {/* Categories */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16 }}
-        className="mb-2"
+        contentContainerStyle={styles.scroll}
       >
         <FilterChip
           label="All categories"
           selected={selectedCategory === ''}
           onPress={() => onSelectCategory('')}
         />
+
         {categories.map((cat) => (
           <FilterChip
             key={cat.id}
@@ -72,16 +47,18 @@ export function FilterBar({
         ))}
       </ScrollView>
 
+      {/* Job types */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16 }}
+        contentContainerStyle={styles.scroll}
       >
         <FilterChip
           label="All types"
           selected={selectedJobType === ''}
           onPress={() => onSelectJobType('')}
         />
+
         {JOB_TYPES.map((type) => (
           <FilterChip
             key={type}
@@ -96,3 +73,12 @@ export function FilterBar({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 12,
+  },
+  scroll: {
+    paddingHorizontal: 16,
+  },
+});

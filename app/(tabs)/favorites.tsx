@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 import { JobCard } from '@/components/JobCard';
@@ -9,7 +9,7 @@ export default function FavoritesScreen() {
   const favorites = useFavoritesStore((s) => s.favorites);
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.container}>
       <FlashList
         data={favorites}
         keyExtractor={(item: Job) => String(item.id)}
@@ -21,8 +21,19 @@ export default function FavoritesScreen() {
             icon="heart-outline"
           />
         }
-        contentContainerStyle={{ paddingTop: 16, paddingBottom: 24 }}
+        contentContainerStyle={styles.list}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB', // gray-50
+  },
+  list: {
+    paddingTop: 16,
+    paddingBottom: 24,
+  },
+});
