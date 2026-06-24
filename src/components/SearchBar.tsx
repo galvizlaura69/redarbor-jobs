@@ -15,7 +15,6 @@ export function SearchBar({
   return (
     <View style={styles.container}>
       <Ionicons name="search-outline" size={18} color="#9CA3AF" />
-
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -43,9 +42,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: 12,
+    borderRadius: 30,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 4,
     marginHorizontal: 16,
     marginBottom: 12,
   },

@@ -54,6 +54,7 @@ export default function JobsScreen() {
         />
       </View>
       <FlashList
+        style={styles.list}
         data={jobs}
         estimatedItemSize={154}
         keyExtractor={(item: Job) => String(item.id)}
@@ -71,15 +72,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9FAFB',
   },
-  header: {
-    paddingTop: 16,
-  },
+
   list: {
+    paddingTop: 24,
     paddingBottom: 24,
   },
   fixedHeader: {
     backgroundColor: '#F9FAFB',
-    paddingTop: 16,
+    paddingTop: 22,
     paddingBottom: 8,
     zIndex: 10,
     elevation: 10,
