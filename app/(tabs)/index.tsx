@@ -60,7 +60,7 @@ export default function JobsScreen() {
           keyExtractor={(item: Job) => String(item.id)}
           renderItem={({ item }) => <JobCard job={item} />}
           onRefresh={loadJobs}
-          refreshing={uiState === 'loading'}
+          refreshing={isLoading}
           ListEmptyComponent={
             <EmptyState
               title="Sin resultados"
