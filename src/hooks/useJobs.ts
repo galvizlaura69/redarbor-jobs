@@ -15,21 +15,21 @@ export function useJobs() {
     setJobType,
   } = useJobsStore();
 
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      loadJobs();
-    }, 400);
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [category, jobType]);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     loadJobs();
   }, []);
+
+  const handleSetCategory = (value: string) => {
+    setCategory(value);
+    loadJobs({ category: value, jobType });
+  };
+
+  const handleSetJobType = (value: string) => {
+    setJobType(value);
+    loadJobs({ category, jobType: value });
+  };
 
   return {
     jobs,
@@ -40,8 +40,8 @@ export function useJobs() {
     jobType,
     loadJobs,
     setSearch,
-    setCategory,
-    setJobType,
+    setCategory: handleSetCategory,
+    setJobType: handleSetJobType,
     isLoading: uiState === 'loading',
     isError: uiState === 'error',
     isEmpty: uiState === 'success' && jobs.length === 0,

@@ -3,6 +3,8 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Job } from '../types/jobs';
 import { FavoriteButton } from './FavoriteButton';
+import { useState } from 'react';
+
 
 interface JobCardProps {
   job: Job;
@@ -19,6 +21,7 @@ function formatDate(dateString: string): string {
 
 export function JobCard({ job }: JobCardProps) {
   const router = useRouter();
+  const [imageError, setImageError] = useState(false);
 
   return (
     <TouchableOpacity
@@ -28,17 +31,20 @@ export function JobCard({ job }: JobCardProps) {
     >
       <View style={styles.header}>
         <View style={styles.companyRow}>
-          {job.company_logo ? (
+          {job.company_logo && !imageError ? (
             <Image
               source={{ uri: job.company_logo }}
               style={styles.logo}
               resizeMode="contain"
+              onError={() => setImageError(true)}
             />
           ) : (
             <View style={styles.logoFallback}>
-              <Text style={styles.logoText}>
-                {job.company_name.charAt(0)}
-              </Text>
+              <Ionicons
+                name="briefcase-outline"
+                size={24}
+                color="#6B7280"
+              />
             </View>
           )}
 
