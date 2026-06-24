@@ -1,13 +1,6 @@
 import { Job, Category } from '@/types/jobs';
 import { ENDPOINTS } from '@/constants/api';
 
-const JOB_TYPE_MAP: Record<string, string> = {
-  'full-time': 'full_time',
-  'part-time': 'part_time',
-  'contract': 'contract',
-  'freelance': 'freelance',
-  'internship': 'internship',
-};
 
 export async function fetchJobs(params?: {
   search?: string;

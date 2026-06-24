@@ -1,4 +1,4 @@
-import { ScrollView, Share } from 'react-native';
+import { ScrollView, Share,Linking } from 'react-native';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 
@@ -42,9 +42,12 @@ export default function JobDetailScreen() {
     });
   };
 
+  const handleApply = () => Linking.openURL(job.url);
+
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <JobCardId job={job} onShare={handleShare} />
+      <JobCardId job={job} onShare={handleShare} onRedirect={handleApply} />
     </ScrollView>
   );
 }

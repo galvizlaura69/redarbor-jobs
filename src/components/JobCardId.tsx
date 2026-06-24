@@ -14,6 +14,7 @@ import type { Job } from '@/types/jobs';
 interface Props {
     job: Job;
     onShare: () => void;
+    onRedirect: () => void
 }
 
 function formatDate(dateString: string): string {
@@ -24,8 +25,9 @@ function formatDate(dateString: string): string {
     });
 }
 
-export function JobCardId({ job, onShare }: Props) {
-    const [imageError, setImageError] = useState(false); 
+export function JobCardId({ job, onShare, onRedirect }: Props) {
+
+    const [imageError, setImageError] = useState(false);
 
     const htmlContent = `
     <html>
@@ -49,6 +51,7 @@ export function JobCardId({ job, onShare }: Props) {
       <body>${job.description}</body>
     </html>
   `;
+
 
     return (
         <View>
@@ -127,6 +130,9 @@ export function JobCardId({ job, onShare }: Props) {
                 />
             </View>
             <View style={styles.actions}>
+                <TouchableOpacity onPress={onRedirect} style={styles.applyButton}>
+                    <Text style={styles.applyButtonText}>Aplicar ahora</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={onShare} style={styles.shareButton}>
                     <Ionicons name="share-outline" size={22} color="#4F46E5" />
                 </TouchableOpacity>
@@ -221,14 +227,28 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginBottom: 12,
     },
-    actions: {
-        paddingHorizontal: 16,
-        paddingVertical: 24,
-    },
+actions: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 24,
+    gap: 12,
+  },
     shareButton: {
         backgroundColor: '#F3F4F6',
         padding: 16,
         borderRadius: 16,
         alignItems: 'center',
+    },
+    applyButton: {
+        flex: 1,
+        backgroundColor: '#4F46E5',
+        paddingVertical: 16,
+        borderRadius: 16,
+        alignItems: 'center',
+    },
+    applyButtonText: {
+        color: '#FFFFFF',
+        fontWeight: '600',
+        fontSize: 16,
     },
 });
