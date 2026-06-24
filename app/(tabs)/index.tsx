@@ -53,6 +53,13 @@ export default function JobsScreen() {
           onSelectJobType={setJobType}
         />
       </View>
+      ListEmptyComponent={
+        <EmptyState
+          title="Sin resultados"
+          message="Intenta ajustar tu búsqueda o filtros para encontrar lo que buscas."
+          icon="briefcase-outline"
+        />
+      }
       <FlashList
         style={styles.list}
         data={jobs}
