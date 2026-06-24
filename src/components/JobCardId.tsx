@@ -94,8 +94,6 @@ export function JobCardId({ job, onShare }: Props) {
                     )}
                 </View>
             </View>
-
-            {/* INFO */}
             <View style={styles.infoSection}>
                 <View style={styles.infoRow}>
                     <Ionicons name="location-outline" size={18} color="#6B7280" />
@@ -103,7 +101,6 @@ export function JobCardId({ job, onShare }: Props) {
                         {job.candidate_required_location || 'Mundial'}
                     </Text>
                 </View>
-
                 <View style={styles.infoRow}>
                     <Ionicons name="calendar-outline" size={18} color="#6B7280" />
                     <Text style={styles.infoText}>
@@ -118,8 +115,6 @@ export function JobCardId({ job, onShare }: Props) {
                     </View>
                 )}
             </View>
-
-            {/* DESCRIPTION */}
             <View style={styles.descriptionSection}>
                 <Text style={styles.descriptionTitle}>
                     Descripción del cargo
@@ -131,8 +126,6 @@ export function JobCardId({ job, onShare }: Props) {
                     style={{ height: 600 }}
                 />
             </View>
-
-            {/* ACTIONS */}
             <View style={styles.actions}>
                 <TouchableOpacity onPress={onShare} style={styles.shareButton}>
                     <Ionicons name="share-outline" size={22} color="#4F46E5" />
