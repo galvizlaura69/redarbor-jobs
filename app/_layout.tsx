@@ -2,6 +2,8 @@ import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
+import Toast from 'react-native-toast-message';
+
 
 export default function RootLayout() {
   const hydrate = useFavoritesStore((s) => s.hydrate);
@@ -28,6 +30,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
+      <Toast />
     </>
   );
 }

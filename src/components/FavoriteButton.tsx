@@ -1,5 +1,7 @@
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
+
 import { Job } from '../types/jobs';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 
@@ -14,7 +16,23 @@ export function FavoriteButton({ job, size = 24 }: FavoriteButtonProps) {
   const removeFavorite = useFavoritesStore((s) => s.removeFavorite);
 
   const toggle = () => {
-    isFavorite ? removeFavorite(job.id) : addFavorite(job);
+    if (isFavorite) {
+      removeFavorite(job.id);
+
+      Toast.show({
+        type: 'info',
+        text1: 'Eliminado de favoritos',
+        text2: job.title,
+      });
+    } else {
+      addFavorite(job);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Agregado a favoritos ❤️',
+        text2: job.title,
+      });
+    }
   };
 
   return (
