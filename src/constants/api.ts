@@ -20,6 +20,7 @@ export const CATEGORIES = [
   { label: 'Sales', value: 'Sales' },
   { label: 'Writing', value: 'Writing' },
   { label: 'Product', value: 'Product' },
-  { label: 'Data', value: 'Data' },
+  { label: 'Medical', value: 'Medical' },
+  { label: 'Artificial Intelligence', value: 'Artificial Intelligence' },
   { label: 'All others', value: 'All others' },
 ];
