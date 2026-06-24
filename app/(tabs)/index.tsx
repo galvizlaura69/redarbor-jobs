@@ -43,6 +43,16 @@ export default function JobsScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.fixedHeader}>
+        <SearchBar value={search} onChangeText={setSearch} />
+        <FilterBar
+          categories={categories}
+          selectedCategory={category}
+          selectedJobType={jobType}
+          onSelectCategory={setCategory}
+          onSelectJobType={setJobType}
+        />
+      </View>
       <FlashList
         data={jobs}
         estimatedItemSize={154}
@@ -50,25 +60,6 @@ export default function JobsScreen() {
         renderItem={({ item }) => <JobCard job={item} />}
         onRefresh={loadJobs}
         refreshing={uiState === 'loading'}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <SearchBar value={search} onChangeText={setSearch} />
-            <FilterBar
-              categories={categories}
-              selectedCategory={category}
-              selectedJobType={jobType}
-              onSelectCategory={setCategory}
-              onSelectJobType={setJobType}
-            />
-          </View>
-        }
-        ListEmptyComponent={
-          <EmptyState
-            title="Sin resultados"
-            message="Intenta ajustar tu búsqueda o filtros para encontrar lo que buscas."
-            icon="briefcase-outline"
-          />
-        }
         contentContainerStyle={styles.list}
       />
     </View>
@@ -86,4 +77,11 @@ const styles = StyleSheet.create({
   list: {
     paddingBottom: 24,
   },
+  fixedHeader: {
+    backgroundColor: '#F9FAFB',
+    paddingTop: 16,
+    paddingBottom: 8,
+    zIndex: 10,
+    elevation: 10,
+  }
 });
