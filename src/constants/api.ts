@@ -6,9 +6,9 @@ export const ENDPOINTS = {
 } as const;
 
 export const JOB_TYPES = [
-  { label: 'Full-time', value: 'full_time' },
+  { label: 'Full time', value: 'full_time' },
   { label: 'Contract', value: 'contract' },
-  { label: 'Part-time', value: 'part_time' },
+  { label: 'Part time', value: 'part_time' },
   { label: 'Freelance', value: 'freelance' },
   { label: 'Internship', value: 'internship' },
 ];

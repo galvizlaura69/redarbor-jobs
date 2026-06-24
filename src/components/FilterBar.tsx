@@ -49,7 +49,6 @@ export function FilterBar({
   const [visible, setVisible] = useState(false);
   const [tab, setTab] = useState<'category' | 'type'>('category');
 
-  // Estado local del modal — no afecta el store hasta aplicar
   const [tempCategory, setTempCategory] = useState(selectedCategory);
   const [tempJobType, setTempJobType] = useState(selectedJobType);
 
