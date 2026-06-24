@@ -56,13 +56,6 @@ export default function JobsScreen() {
 
       {isLoading ? (
         <LoadingState count={6} />
-      ) : isError ? (
-        <View style={styles.content}>
-          <ErrorState
-            message={error ?? undefined}
-            onRetry={loadJobs}
-          />
-        </View>
       ) : (
         <FlashList
           data={jobs}
