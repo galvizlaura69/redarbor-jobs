@@ -11,7 +11,7 @@ export interface Job {
   candidate_required_location: string;
   salary: string;
   description: string;
-  company_logo_url:string
+  company_logo_url: string;
 }
 
 export interface JobsResponse {
@@ -19,9 +19,8 @@ export interface JobsResponse {
 }
 
 export interface Category {
-  id: number;
-  name: string;
-  slug: string;
+  label: string;
+  value: string;
 }
 
 export type UIState = 'idle' | 'loading' | 'success' | 'error';

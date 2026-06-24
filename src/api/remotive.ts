@@ -1,4 +1,4 @@
-import { Job, Category } from '@/types/jobs';
+import { Job } from '@/types/jobs';
 import { ENDPOINTS } from '@/constants/api';
 
 
@@ -15,11 +15,4 @@ export async function fetchJobs(params?: {
   if (!res.ok) throw new Error('Error al obtener empleos');
   const data = await res.json();
   return data.jobs as Job[];
-}
-
-export async function fetchCategories(): Promise<Category[]> {
-  const res = await fetch(ENDPOINTS.CATEGORIES);
-  if (!res.ok) throw new Error('Error al obtener categorías');
-  const data = await res.json();
-  return data.jobs as Category[];
 }

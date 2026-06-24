@@ -9,13 +9,12 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Category } from '../types/jobs';
 import { JOB_TYPES } from '@/constants/api';
+import { CATEGORIES } from '@/constants/api';
 
 
 
 interface FilterBarProps {
-  categories: Category[];
   selectedCategory: string;
   selectedJobType: string;
   onSelectCategory: (category: string) => void;
@@ -40,7 +39,6 @@ function OptionRow({ label, selected, onPress }: OptionRowProps) {
 }
 
 export function FilterBar({
-  categories,
   selectedCategory,
   selectedJobType,
   onSelectCategory,
@@ -105,9 +103,7 @@ export function FilterBar({
               style={styles.activeChip}
               onPress={() => onSelectCategory('')}
             >
-              <Text style={styles.activeChipText}>
-                {categories.find((c) => c.slug === selectedCategory)?.name ?? selectedCategory}
-              </Text>
+               <Text style={styles.activeChipText}>{selectedCategory}</Text>
               <Ionicons name="close" size={14} color="#4F46E5" />
             </TouchableOpacity>
           )}
@@ -158,13 +154,13 @@ export function FilterBar({
                   selected={tempCategory === ''}
                   onPress={() => setTempCategory('')}
                 />
-                {categories.map((cat) => (
+                {CATEGORIES.map((cat) => (
                   <OptionRow
-                    key={cat.id}
-                    label={cat.name}
-                    selected={tempCategory === cat.slug}
+                    key={cat.value}
+                    label={cat.label}
+                    selected={tempCategory === cat.value}
                     onPress={() =>
-                      setTempCategory(tempCategory === cat.slug ? '' : cat.slug)
+                      setTempCategory(tempCategory === cat.value ? '' : cat.value)
                     }
                   />
                 ))}

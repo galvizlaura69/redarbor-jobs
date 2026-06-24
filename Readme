@@ -67,7 +67,7 @@ redarbor-jobs/
 │   │   └── useFavoritesStore.ts # Favorites + persistence (Zustand)
 │   ├── hooks/
 │   │   ├── useJobs.ts        # Jobs fetching hook
-│   │   └── useCategories.ts  # Categories fetching hook
+│   │ 
 │   └── components/
 │       ├── JobCard.tsx        # Job list item
 │       ├── SearchBar.tsx      # Search input

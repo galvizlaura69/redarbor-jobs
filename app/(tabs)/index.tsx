@@ -2,7 +2,6 @@ import { View, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 
 import { useJobs } from '@/hooks/useJobs';
-import { useCategories } from '@/hooks/useCategories';
 
 import { JobCard } from '@/components/JobCard';
 import { SearchBar } from '@/components/SearchBar';
@@ -29,7 +28,6 @@ export default function JobsScreen() {
     isError,
   } = useJobs();
 
-  const { categories } = useCategories();
 
   if (isLoading) return <LoadingState count={6} />;
   if (isError) {
@@ -46,7 +44,6 @@ export default function JobsScreen() {
       <View style={styles.fixedHeader}>
         <SearchBar value={search} onChangeText={setSearch} />
         <FilterBar
-          categories={categories}
           selectedCategory={category}
           selectedJobType={jobType}
           onSelectCategory={setCategory}
