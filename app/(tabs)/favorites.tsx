@@ -12,12 +12,13 @@ export default function FavoritesScreen() {
     <View style={styles.container}>
       <FlashList
         data={favorites}
+        estimatedItemSize={154}
         keyExtractor={(item: Job) => String(item.id)}
         renderItem={({ item }: { item: Job }) => <JobCard job={item} />}
         ListEmptyComponent={
           <EmptyState
-            title="No favorites yet"
-            message="Save jobs you're interested in and they'll appear here."
+            title="Sin favoritos aún"
+            message="Guarda empleos que te interesen y aparecerán aquí."
             icon="heart-outline"
           />
         }
@@ -30,7 +31,7 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB', // gray-50
+    backgroundColor: '#F9FAFB',
   },
   list: {
     paddingTop: 16,

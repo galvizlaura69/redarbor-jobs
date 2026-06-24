@@ -10,7 +10,7 @@ interface SearchBarProps {
 export function SearchBar({
   value,
   onChangeText,
-  placeholder = 'Search jobs or companies...',
+  placeholder = 'Buscar...',
 }: SearchBarProps) {
   return (
     <View style={styles.container}>

@@ -4,6 +4,7 @@ import { fetchJobs } from '@/api/remotive';
 
 interface JobsState {
   jobs: Job[];
+  allJobs: Job[];
   uiState: UIState;
   error: string | null;
   search: string;
@@ -17,6 +18,7 @@ interface JobsState {
 
 export const useJobsStore = create<JobsState>((set, get) => ({
   jobs: [],
+  allJobs: [],
   uiState: 'idle',
   error: null,
   search: '',
@@ -26,19 +28,35 @@ export const useJobsStore = create<JobsState>((set, get) => ({
   loadJobs: async () => {
     set({ uiState: 'loading', error: null });
     try {
-      const { search, category, jobType } = get();
-      const jobs = await fetchJobs({
-        search: search || undefined,
+      const { category, jobType } = get();
+      const allJobs = await fetchJobs({
         category: category || undefined,
         job_type: jobType || undefined,
       });
-      set({ jobs, uiState: 'success' });
+      const { search } = get();
+      const jobs = filterBySearch(allJobs, search);
+      set({ allJobs, jobs, uiState: 'success' });
     } catch (e: any) {
       set({ uiState: 'error', error: e.message });
     }
   },
 
-  setSearch:   (search)   => set({ search }),
+  setSearch: (search) => {
+    const { allJobs } = get();
+    const jobs = filterBySearch(allJobs, search);
+    set({ search, jobs });
+  },
+
   setCategory: (category) => set({ category }),
   setJobType:  (jobType)  => set({ jobType }),
 }));
+
+function filterBySearch(jobs: Job[], search: string): Job[] {
+  if (!search.trim()) return jobs;
+  const q = search.toLowerCase();
+  return jobs.filter(
+    (j) =>
+      j.title.toLowerCase().includes(q) ||
+      j.company_name.toLowerCase().includes(q)
+  );
+}

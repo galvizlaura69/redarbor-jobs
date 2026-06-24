@@ -71,7 +71,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Jobs',
+          title: 'Empleos',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="briefcase-outline" size={size} color={color} />
           ),
@@ -81,7 +81,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="favorites"
         options={{
-          title: 'Favorites',
+          title: 'Favoritos',
           tabBarIcon: ({ color, size }) => (
             <FavoritesTabIcon color={color} size={size} />
           ),

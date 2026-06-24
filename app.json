@@ -3,6 +3,7 @@
     "name": "redarbor-jobs",
     "slug": "redarbor-jobs",
     "scheme": "redarbor-jobs",
+    "newArchEnabled": true,
     "version": "1.0.0",
     "orientation": "portrait",
     "plugins": [

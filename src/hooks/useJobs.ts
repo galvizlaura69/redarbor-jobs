@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useJobsStore } from '../store/useJobsStore';
+import { useEffect, useRef } from 'react';
+import { useJobsStore } from '@/store/useJobsStore';
 
 export function useJobs() {
   const {
@@ -15,9 +15,21 @@ export function useJobs() {
     setJobType,
   } = useJobsStore();
 
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      loadJobs();
+    }, 400);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [category, jobType]);
+
   useEffect(() => {
     loadJobs();
-  }, [search, category, jobType]);
+  }, []);
 
   return {
     jobs,

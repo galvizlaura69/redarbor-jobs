@@ -45,6 +45,7 @@ export default function JobsScreen() {
     <View style={styles.container}>
       <FlashList
         data={jobs}
+        estimatedItemSize={154}
         keyExtractor={(item: Job) => String(item.id)}
         renderItem={({ item }) => <JobCard job={item} />}
         onRefresh={loadJobs}
@@ -52,7 +53,6 @@ export default function JobsScreen() {
         ListHeaderComponent={
           <View style={styles.header}>
             <SearchBar value={search} onChangeText={setSearch} />
-
             <FilterBar
               categories={categories}
               selectedCategory={category}
@@ -64,8 +64,8 @@ export default function JobsScreen() {
         }
         ListEmptyComponent={
           <EmptyState
-            title="No jobs found"
-            message="Try adjusting your search or filters to find what you're looking for."
+            title="Sin resultados"
+            message="Intenta ajustar tu búsqueda o filtros para encontrar lo que buscas."
             icon="briefcase-outline"
           />
         }
@@ -78,7 +78,7 @@ export default function JobsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB', // gray-50
+    backgroundColor: '#F9FAFB',
   },
   header: {
     paddingTop: 16,

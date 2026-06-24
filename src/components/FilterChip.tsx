@@ -31,17 +31,17 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   chipSelected: {
-    backgroundColor: '#4F46E5', // indigo-600
+    backgroundColor: '#4F46E5', 
     borderColor: '#4F46E5',
   },
   chipUnselected: {
     backgroundColor: '#fff',
-    borderColor: '#E5E7EB', // gray-200
+    borderColor: '#E5E7EB', 
   },
   text: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#6B7280', // gray-600
+    color: '#6B7280', 
   },
   textSelected: {
     color: '#fff',
