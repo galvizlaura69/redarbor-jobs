@@ -53,23 +53,33 @@ export default function JobsScreen() {
           onSelectJobType={setJobType}
         />
       </View>
-      ListEmptyComponent={
-        <EmptyState
-          title="Sin resultados"
-          message="Intenta ajustar tu búsqueda o filtros para encontrar lo que buscas."
-          icon="briefcase-outline"
+
+      {isLoading ? (
+        <LoadingState count={6} />
+      ) : isError ? (
+        <View style={styles.content}>
+          <ErrorState
+            message={error ?? undefined}
+            onRetry={loadJobs}
+          />
+        </View>
+      ) : (
+        <FlashList
+          data={jobs}
+          estimatedItemSize={154}
+          keyExtractor={(item: Job) => String(item.id)}
+          renderItem={({ item }) => <JobCard job={item} />}
+          onRefresh={loadJobs}
+          refreshing={uiState === 'loading'}
+          ListEmptyComponent={
+            <EmptyState
+              title="Sin resultados"
+              message="Intenta ajustar tu búsqueda o filtros para encontrar lo que buscas."
+              icon="briefcase-outline"
+            />
+          }
         />
-      }
-      <FlashList
-        style={styles.list}
-        data={jobs}
-        estimatedItemSize={154}
-        keyExtractor={(item: Job) => String(item.id)}
-        renderItem={({ item }) => <JobCard job={item} />}
-        onRefresh={loadJobs}
-        refreshing={uiState === 'loading'}
-        contentContainerStyle={styles.list}
-      />
+      )}
     </View>
   );
 }
@@ -79,10 +89,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9FAFB',
   },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+  },
 
   list: {
-    paddingTop: 24,
+    paddingTop: 16,
     paddingBottom: 24,
+  },
+
+  emptyList: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   fixedHeader: {
     backgroundColor: '#F9FAFB',
