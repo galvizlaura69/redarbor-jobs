@@ -20,7 +20,7 @@
 
 ## Features
 
-### 📋 Job Listings
+### Job Listings
 - List of remote jobs with company logo, title, company name, location and publication date
 - Text search by title and company name
 - Filter by category (using `/categories` endpoint)
@@ -29,7 +29,7 @@
 - Pull-to-refresh
 - Visual states: loading, error, empty results
 
-### 🔍 Job Detail
+###  Job Detail
 - Full company and position information
 - Salary (when available)
 - Full HTML job description rendered natively
@@ -37,7 +37,7 @@
 - Apply to job (opens external URL)
 - Share job natively
 
-### ❤️ Favorites
+### Favorites
 - Persisted across app restarts using AsyncStorage
 - Remove jobs from favorites
 - Navigate to job detail from favorites
@@ -102,7 +102,7 @@ git clone https://github.com/YOUR_USERNAME/redarbor-jobs.git
 cd redarbor-jobs
 
 # Install dependencies
-npm install --legacy-peer-deps
+npm install
 ```
 
 ### Running the app
