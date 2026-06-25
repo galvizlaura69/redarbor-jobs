@@ -1,6 +1,8 @@
 import { create } from 'zustand';
+import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Job } from '../types/jobs';
+
 
 const STORAGE_KEY = '@redarbor_favorites';
 
@@ -18,9 +20,17 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
   hydrated: false,
 
   hydrate: async () => {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    if (raw) set({ favorites: JSON.parse(raw) });
-    set({ hydrated: true });
+    try {
+      const raw = await AsyncStorage.getItem(STORAGE_KEY);
+      if (raw) set({ favorites: JSON.parse(raw) as Job[] });
+    } catch {
+      Toast.show({
+        type: 'error',
+        text1: 'No se pudo agregar a favoritos',
+      });
+    } finally {
+      set({ hydrated: true });
+    }
   },
 
   addFavorite: (job) => {

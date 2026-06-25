@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,18 +7,20 @@ import {
   ScrollView,
   StyleSheet,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
 import { JOB_TYPES } from '@/constants/api';
-import { CATEGORIES } from '@/constants/api';
-
-
+import { colors } from '@/theme/colors';
+import { useJobsStore } from '@/store/useJobsStore';
 
 interface FilterBarProps {
   selectedCategory: string;
   selectedJobType: string;
-  onSelectCategory: (category: string) => void;
-  onSelectJobType: (jobType: string) => void;
+  onApply: (category: string, jobType: string) => void;
+  onClearCategory: () => void;
+  onClearJobType: () => void;
 }
 
 interface OptionRowProps {
@@ -29,28 +31,43 @@ interface OptionRowProps {
 
 function OptionRow({ label, selected, onPress }: OptionRowProps) {
   return (
-    <TouchableOpacity style={styles.optionRow} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.optionRow}
+      onPress={onPress}
+      accessibilityRole="radio"
+      accessibilityState={{ selected }}
+    >
       <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>
         {label}
       </Text>
-      {selected && <Ionicons name="checkmark" size={20} color="#4F46E5" />}
+      {selected && <Ionicons name="checkmark" size={20} color={colors.primary} />}
     </TouchableOpacity>
   );
 }
 
+type FilterTab = 'category' | 'type';
+
 export function FilterBar({
   selectedCategory,
   selectedJobType,
-  onSelectCategory,
-  onSelectJobType,
+  onApply,
+  onClearCategory,
+  onClearJobType,
 }: FilterBarProps) {
   const [visible, setVisible] = useState(false);
-  const [tab, setTab] = useState<'category' | 'type'>('category');
-
+  const [tab, setTab] = useState<FilterTab>('category');
   const [tempCategory, setTempCategory] = useState(selectedCategory);
   const [tempJobType, setTempJobType] = useState(selectedJobType);
 
+  const categories = useJobsStore((s) => s.categories);
+  const categoriesLoaded = useJobsStore((s) => s.categoriesLoaded);
+  const loadCategories = useJobsStore((s) => s.loadCategories);
+
   const activeCount = (selectedCategory ? 1 : 0) + (selectedJobType ? 1 : 0);
+
+  useEffect(() => {
+    if (visible) loadCategories();
+  }, [visible]);
 
   const handleOpen = () => {
     setTempCategory(selectedCategory);
@@ -59,8 +76,7 @@ export function FilterBar({
   };
 
   const handleApply = () => {
-    onSelectCategory(tempCategory);
-    onSelectJobType(tempJobType);
+    onApply(tempCategory, tempJobType);
     setVisible(false);
   };
 
@@ -81,13 +97,20 @@ export function FilterBar({
         <TouchableOpacity
           style={[styles.filterButton, activeCount > 0 && styles.filterButtonActive]}
           onPress={handleOpen}
+          accessibilityRole="button"
+          accessibilityLabel={`Filtros${activeCount > 0 ? `, ${activeCount} activos` : ''}`}
         >
           <Ionicons
             name="options-outline"
             size={18}
-            color={activeCount > 0 ? '#4F46E5' : '#6B7280'}
+            color={activeCount > 0 ? colors.primary : colors.gray500}
           />
-          <Text style={[styles.filterButtonText, activeCount > 0 && styles.filterButtonTextActive]}>
+          <Text
+            style={[
+              styles.filterButtonText,
+              activeCount > 0 && styles.filterButtonTextActive,
+            ]}
+          >
             Filtros
           </Text>
           {activeCount > 0 && (
@@ -101,19 +124,23 @@ export function FilterBar({
           {selectedCategory && (
             <TouchableOpacity
               style={styles.activeChip}
-              onPress={() => onSelectCategory('')}
+              onPress={onClearCategory}
+              accessibilityRole="button"
+              accessibilityLabel={`Quitar filtro ${selectedCategory}`}
             >
-               <Text style={styles.activeChipText}>{selectedCategory}</Text>
-              <Ionicons name="close" size={14} color="#4F46E5" />
+              <Text style={styles.activeChipText}>{selectedCategory}</Text>
+              <Ionicons name="close" size={14} color={colors.primary} />
             </TouchableOpacity>
           )}
           {selectedJobType && (
             <TouchableOpacity
               style={styles.activeChip}
-              onPress={() => onSelectJobType('')}
+              onPress={onClearJobType}
+              accessibilityRole="button"
+              accessibilityLabel={`Quitar filtro ${selectedJobType}`}
             >
               <Text style={styles.activeChipText}>{selectedJobType}</Text>
-              <Ionicons name="close" size={14} color="#4F46E5" />
+              <Ionicons name="close" size={14} color={colors.primary} />
             </TouchableOpacity>
           )}
         </ScrollView>
@@ -123,29 +150,31 @@ export function FilterBar({
         <SafeAreaView style={styles.modal}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Filtros</Text>
-            <TouchableOpacity onPress={handleClose}>
-              <Ionicons name="close" size={24} color="#1F2937" />
+            <TouchableOpacity
+              onPress={handleClose}
+              accessibilityRole="button"
+              accessibilityLabel="Cerrar filtros"
+            >
+              <Ionicons name="close" size={24} color={colors.gray800} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.tabs}>
-            <TouchableOpacity
-              style={[styles.tabItem, tab === 'category' && styles.tabItemActive]}
-              onPress={() => setTab('category')}
-            >
-              <Text style={[styles.tabText, tab === 'category' && styles.tabTextActive]}>
-                Categoría
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tabItem, tab === 'type' && styles.tabItemActive]}
-              onPress={() => setTab('type')}
-            >
-              <Text style={[styles.tabText, tab === 'type' && styles.tabTextActive]}>
-                Tipo de empleo
-              </Text>
-            </TouchableOpacity>
+            {(['category', 'type'] as const).map((t) => (
+              <TouchableOpacity
+                key={t}
+                style={[styles.tabItem, tab === t && styles.tabItemActive]}
+                onPress={() => setTab(t)}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: tab === t }}
+              >
+                <Text style={[styles.tabText, tab === t && styles.tabTextActive]}>
+                  {t === 'category' ? 'Categoría' : 'Tipo de empleo'}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
+
           <ScrollView style={styles.optionsList}>
             {tab === 'category' && (
               <>
@@ -154,16 +183,23 @@ export function FilterBar({
                   selected={tempCategory === ''}
                   onPress={() => setTempCategory('')}
                 />
-                {CATEGORIES.map((cat) => (
-                  <OptionRow
-                    key={cat.value}
-                    label={cat.label}
-                    selected={tempCategory === cat.value}
-                    onPress={() =>
-                      setTempCategory(tempCategory === cat.value ? '' : cat.value)
-                    }
+                {!categoriesLoaded ? (
+                  <ActivityIndicator
+                    style={styles.loader}
+                    color={colors.primary}
                   />
-                ))}
+                ) : (
+                  categories.map((cat) => (
+                    <OptionRow
+                      key={cat.id}
+                      label={cat.name}
+                      selected={tempCategory === cat.name}
+                      onPress={() =>
+                        setTempCategory(tempCategory === cat.name ? '' : cat.name)
+                      }
+                    />
+                  ))
+                )}
               </>
             )}
 
@@ -187,6 +223,7 @@ export function FilterBar({
               </>
             )}
           </ScrollView>
+
           <View style={styles.modalFooter}>
             <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
               <Text style={styles.clearButtonText}>Limpiar filtros</Text>
@@ -213,27 +250,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.gray200,
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     gap: 6,
   },
   filterButtonActive: {
-    borderColor: '#4F46E5',
-    backgroundColor: '#EEF2FF',
+    borderColor: colors.primary,
+    backgroundColor: colors.primaryLight,
   },
   filterButtonText: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#6B7280',
+    color: colors.gray500,
   },
   filterButtonTextActive: {
-    color: '#4F46E5',
+    color: colors.primary,
   },
   badge: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     width: 18,
     height: 18,
@@ -241,7 +278,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   badgeText: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 11,
     fontWeight: '700',
   },
@@ -251,7 +288,7 @@ const styles = StyleSheet.create({
   activeChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EEF2FF',
+    backgroundColor: colors.primaryLight,
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -260,12 +297,12 @@ const styles = StyleSheet.create({
   },
   activeChipText: {
     fontSize: 12,
-    color: '#4F46E5',
+    color: colors.primary,
     fontWeight: '500',
   },
   modal: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -274,17 +311,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    borderBottomColor: colors.gray100,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1F2937',
+    color: colors.gray800,
   },
   tabs: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    borderBottomColor: colors.gray100,
   },
   tabItem: {
     flex: 1,
@@ -294,15 +331,15 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabItemActive: {
-    borderBottomColor: '#4F46E5',
+    borderBottomColor: colors.primary,
   },
   tabText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#9CA3AF',
+    color: colors.gray400,
   },
   tabTextActive: {
-    color: '#4F46E5',
+    color: colors.primary,
     fontWeight: '600',
   },
   optionsList: {
@@ -315,15 +352,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F9FAFB',
+    borderBottomColor: colors.gray50,
   },
   optionLabel: {
     fontSize: 15,
-    color: '#374151',
+    color: colors.gray700,
   },
   optionLabelSelected: {
-    color: '#4F46E5',
+    color: colors.primary,
     fontWeight: '600',
+  },
+  loader: {
+    marginTop: 32,
   },
   modalFooter: {
     flexDirection: 'row',
@@ -331,31 +371,31 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     gap: 12,
     borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
+    borderTopColor: colors.gray100,
   },
   clearButton: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.gray200,
     alignItems: 'center',
   },
   clearButtonText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#6B7280',
+    color: colors.gray500,
   },
   applyButton: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: '#4F46E5',
+    backgroundColor: colors.primary,
     alignItems: 'center',
   },
   applyButtonText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.white,
   },
 });

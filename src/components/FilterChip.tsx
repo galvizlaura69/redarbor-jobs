@@ -1,4 +1,5 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
 
 interface FilterChipProps {
   label: string;
@@ -10,14 +11,11 @@ export function FilterChip({ label, selected, onPress }: FilterChipProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[
-        styles.chip,
-        selected ? styles.chipSelected : styles.chipUnselected,
-      ]}
+      style={[styles.chip, selected ? styles.chipSelected : styles.chipUnselected]}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
     >
-      <Text style={[styles.text, selected && styles.textSelected]}>
-        {label}
-      </Text>
+      <Text style={[styles.text, selected && styles.textSelected]}>{label}</Text>
     </TouchableOpacity>
   );
 }
@@ -31,19 +29,19 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   chipSelected: {
-    backgroundColor: '#4F46E5', 
-    borderColor: '#4F46E5',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   chipUnselected: {
-    backgroundColor: '#fff',
-    borderColor: '#E5E7EB', 
+    backgroundColor: colors.white,
+    borderColor: colors.gray200,
   },
   text: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#6B7280', 
+    color: colors.gray500,
   },
   textSelected: {
-    color: '#fff',
+    color: colors.white,
   },
 });

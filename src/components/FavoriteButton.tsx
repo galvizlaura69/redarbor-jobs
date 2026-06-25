@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 
 import { Job } from '../types/jobs';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { colors } from '@/theme/colors';
 
 interface FavoriteButtonProps {
   job: Job;
@@ -18,7 +19,6 @@ export function FavoriteButton({ job, size = 24 }: FavoriteButtonProps) {
   const toggle = () => {
     if (isFavorite) {
       removeFavorite(job.id);
-
       Toast.show({
         type: 'info',
         text1: 'Eliminado de favoritos',
@@ -26,7 +26,6 @@ export function FavoriteButton({ job, size = 24 }: FavoriteButtonProps) {
       });
     } else {
       addFavorite(job);
-
       Toast.show({
         type: 'success',
         text1: 'Agregado a favoritos ❤️',
@@ -45,7 +44,7 @@ export function FavoriteButton({ job, size = 24 }: FavoriteButtonProps) {
       <Ionicons
         name={isFavorite ? 'heart' : 'heart-outline'}
         size={size}
-        color={isFavorite ? '#EF4444' : '#9CA3AF'}
+        color={isFavorite ? colors.error : colors.gray400}
       />
     </TouchableOpacity>
   );

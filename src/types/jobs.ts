@@ -19,6 +19,12 @@ export interface JobsResponse {
 }
 
 export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface FilterOption {
   label: string;
   value: string;
 }

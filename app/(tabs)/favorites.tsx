@@ -1,9 +1,11 @@
 import { View, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
+
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 import { JobCard } from '@/components/JobCard';
 import { EmptyState } from '@/components/EmptyState';
-import { Job } from '../../src/types/jobs';
+import { colors } from '@/theme/colors';
+import { Job } from '@/types/jobs';
 
 export default function FavoritesScreen() {
   const favorites = useFavoritesStore((s) => s.favorites);
@@ -15,6 +17,7 @@ export default function FavoritesScreen() {
         estimatedItemSize={154}
         keyExtractor={(item: Job) => String(item.id)}
         renderItem={({ item }: { item: Job }) => <JobCard job={item} />}
+        contentContainerStyle={styles.list}
         ListEmptyComponent={
           <EmptyState
             title="Sin favoritos aún"
@@ -22,7 +25,6 @@ export default function FavoritesScreen() {
             icon="heart-outline"
           />
         }
-        contentContainerStyle={styles.list}
       />
     </View>
   );
@@ -31,7 +33,7 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.gray50,
   },
   list: {
     paddingTop: 16,

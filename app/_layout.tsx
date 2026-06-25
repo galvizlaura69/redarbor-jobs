@@ -1,16 +1,26 @@
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { useFavoritesStore } from '@/store/useFavoritesStore';
 import Toast from 'react-native-toast-message';
+import { useFonts } from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
+import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { colors } from '@/theme/colors';
 
 export default function RootLayout() {
   const hydrate = useFavoritesStore((s) => s.hydrate);
 
+    const [fontsLoaded] = useFonts({
+    ...Ionicons.font, 
+  });
+
   useEffect(() => {
     hydrate();
   }, []);
+
+    if (!fontsLoaded) return null; 
+
 
   return (
     <>
@@ -20,12 +30,12 @@ export default function RootLayout() {
         <Stack.Screen
           name="job/[id]"
           options={{
-            title: 'Job Detail',
-            headerBackTitle: 'Back',
-            headerTintColor: '#4F46E5',
+            title: 'Detalle de empleo',
+            headerBackTitle: 'Atrás',
+            headerTintColor: colors.primary,
             headerTitleStyle: {
               fontWeight: '600',
-              color: '#1F2937',
+              color: colors.gray800,
             },
           }}
         />

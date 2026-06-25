@@ -1,26 +1,28 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Job } from '@/types/jobs';
+import { UIState } from '@/types/jobs';
 
 export function useJobs() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [jobType, setJobType] = useState('');
-
-  const [uiState, setUIState] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
+  const [uiState, setUIState] = useState<UIState>('idle');
   const [error, setError] = useState<string | null>(null);
 
   const loadJobs = async () => {
     try {
       setUIState('loading');
-
       const res = await fetch('https://remotive.com/api/remote-jobs');
-      const data = await res.json();
 
-      setJobs(data.jobs || []);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+      setJobs(data.jobs ?? []);
       setUIState('success');
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Error desconocido';
+      setError(message);
       setUIState('error');
     }
   };
@@ -30,18 +32,22 @@ export function useJobs() {
   }, []);
 
   const filteredJobs = useMemo(() => {
+    const q = search.toLowerCase();
+    const normType = jobType.toLowerCase();
+    const normCategory = category.toLowerCase();
+
     return jobs.filter((job) => {
-      const matchSearch = search
-        ? job.title.toLowerCase().includes(search.toLowerCase()) ||
-          job.company_name.toLowerCase().includes(search.toLowerCase())
+      const matchSearch = q
+        ? job.title.toLowerCase().includes(q) ||
+          job.company_name.toLowerCase().includes(q)
         : true;
 
-      const matchCategory = category
-        ? job.category.toLowerCase() === category.toLowerCase()
+      const matchCategory = normCategory
+        ? job.category.toLowerCase() === normCategory
         : true;
 
-      const matchType = jobType
-        ? job.job_type.toLowerCase() === jobType.toLowerCase()
+      const matchType = normType
+        ? job.job_type.toLowerCase() === normType
         : true;
 
       return matchSearch && matchCategory && matchType;
@@ -53,13 +59,13 @@ export function useJobs() {
     search,
     category,
     jobType,
-    setSearch,
-    setCategory,
-    setJobType,
-    loadJobs,
     uiState,
     error,
     isLoading: uiState === 'loading',
     isError: uiState === 'error',
+    setSearch,
+    setCategory,
+    setJobType,
+    loadJobs,
   };
 }

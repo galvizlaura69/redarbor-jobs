@@ -1,4 +1,5 @@
 import { View, StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
 
 function SkeletonCard() {
   return (
@@ -10,7 +11,6 @@ function SkeletonCard() {
           <View style={styles.lineSmall} />
         </View>
       </View>
-
       <View style={styles.lineFull} />
       <View style={styles.lineMedium} />
     </View>
@@ -24,7 +24,7 @@ interface LoadingStateProps {
 export function LoadingState({ count = 6 }: LoadingStateProps) {
   return (
     <View style={styles.container}>
-      {Array.from({ length: count }).map((_, i) => (
+      {Array.from({ length: count }, (_, i) => (
         <SkeletonCard key={i} />
       ))}
     </View>
@@ -37,13 +37,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     marginHorizontal: 16,
     borderWidth: 1,
-    borderColor: '#F3F4F6',
+    borderColor: colors.gray100,
   },
   row: {
     flexDirection: 'row',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.gray200,
   },
   textBlock: {
     marginLeft: 12,
@@ -62,27 +62,27 @@ const styles = StyleSheet.create({
   },
   lineLarge: {
     height: 16,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.gray200,
     borderRadius: 6,
     width: '75%',
     marginBottom: 8,
   },
   lineSmall: {
     height: 12,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.gray100,
     borderRadius: 6,
     width: '50%',
   },
   lineFull: {
     height: 12,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.gray100,
     borderRadius: 6,
     width: '100%',
     marginBottom: 8,
   },
   lineMedium: {
     height: 12,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.gray100,
     borderRadius: 6,
     width: '65%',
   },

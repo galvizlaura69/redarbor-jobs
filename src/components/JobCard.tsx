@@ -1,50 +1,43 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Job } from '../types/jobs';
-import { FavoriteButton } from './FavoriteButton';
 import { useState } from 'react';
 
+import { Job } from '../types/jobs';
+import { FavoriteButton } from './FavoriteButton';
+import { colors } from '@/theme/colors';
+import { formatDate } from '@/utils/date';
 
 interface JobCardProps {
   job: Job;
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
 }
 
 export function JobCard({ job }: JobCardProps) {
   const router = useRouter();
   const [imageError, setImageError] = useState(false);
 
+  const showLogo = Boolean(job.company_logo) && !imageError;
+
   return (
     <TouchableOpacity
       onPress={() => router.push(`/job/${job.id}`)}
       style={styles.card}
       activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={`${job.title} en ${job.company_name}`}
     >
       <View style={styles.header}>
         <View style={styles.companyRow}>
-          {job.company_logo && !imageError ? (
+          {showLogo ? (
             <Image
-              source={{ uri: job.company_logo }}
+              source={{ uri: job.company_logo! }}
               style={styles.logo}
               resizeMode="contain"
               onError={() => setImageError(true)}
             />
           ) : (
             <View style={styles.logoFallback}>
-              <Ionicons
-                name="briefcase-outline"
-                size={24}
-                color="#6B7280"
-              />
+              <Ionicons name="briefcase-outline" size={24} color={colors.gray500} />
             </View>
           )}
 
@@ -63,17 +56,15 @@ export function JobCard({ job }: JobCardProps) {
 
       <View style={styles.metaRow}>
         <View style={styles.metaItem}>
-          <Ionicons name="location-outline" size={13} color="#9CA3AF" />
+          <Ionicons name="location-outline" size={13} color={colors.gray400} />
           <Text style={styles.metaText}>
             {job.candidate_required_location || 'Worldwide'}
           </Text>
         </View>
 
         <View style={styles.metaItem}>
-          <Ionicons name="calendar-outline" size={13} color="#9CA3AF" />
-          <Text style={styles.metaText}>
-            {formatDate(job.publication_date)}
-          </Text>
+          <Ionicons name="calendar-outline" size={13} color={colors.gray400} />
+          <Text style={styles.metaText}>{formatDate(job.publication_date)}</Text>
         </View>
       </View>
 
@@ -94,13 +85,13 @@ export function JobCard({ job }: JobCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     marginHorizontal: 16,
     borderWidth: 1,
-    borderColor: '#F3F4F6',
+    borderColor: colors.gray100,
   },
   header: {
     flexDirection: 'row',
@@ -121,14 +112,9 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: '#E0E7FF',
+    backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  logoText: {
-    color: '#4F46E5',
-    fontSize: 18,
-    fontWeight: '700',
   },
   textContainer: {
     marginLeft: 12,
@@ -137,11 +123,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
+    color: colors.gray800,
   },
   company: {
     fontSize: 14,
-    color: '#6B7280',
+    color: colors.gray500,
     marginTop: 2,
   },
   metaRow: {
@@ -156,7 +142,7 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: colors.gray400,
     marginLeft: 4,
   },
   tags: {
@@ -165,25 +151,25 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   categoryTag: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: colors.primaryLight,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
   },
   categoryText: {
     fontSize: 12,
-    color: '#4F46E5',
+    color: colors.primary,
     fontWeight: '500',
   },
   typeTag: {
-    backgroundColor: '#ECFDF5',
+    backgroundColor: colors.successLight,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
   },
   typeText: {
     fontSize: 12,
-    color: '#10B981',
+    color: colors.success,
     fontWeight: '500',
   },
 });
